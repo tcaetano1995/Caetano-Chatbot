@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: always
+    ports:
+      - "3000:8080"
+    environment:
+      - WEBUI_AUTH=False
+    volumes:
+      - open-webui:/app/backend/data
+    depends_on:
+      - ollama 
+      - fastapi-app
+  
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  fastapi-app:
+    build:
+      context: .
+    container_name: fastapi-app
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    depends_on:
+      - ollama
+volumes:
+  open-webui:
+  ollama-data:
+

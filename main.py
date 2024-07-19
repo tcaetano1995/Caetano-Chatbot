@@ -68,7 +68,7 @@ def clean_document(docs):
 
 
 ##download html doc
-loader = WebBaseLoader(["https://promtior.ai/","https://promtior.ai/solutions/"])
+loader = WebBaseLoader(["https://promtior.ai/","https://promtior.ai/service/","https://promtior.ai/contacto/","https://promtior.ai/use-cases/"])
 
 docs = loader.load()
 
